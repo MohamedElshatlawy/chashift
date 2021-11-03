@@ -1,0 +1,2 @@
+class ResumeNotCompletedException implements Exception {
+}
