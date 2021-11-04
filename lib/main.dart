@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:io';
 
@@ -14,6 +13,7 @@ import 'package:shiftapp/data/repositories/local/local_repository.dart';
 import 'package:shiftapp/presentation/appliedoffers/pages/appliedoffers_pages.dart';
 import 'package:shiftapp/presentation/home/home.dart';
 import 'package:shiftapp/presentation/login/pages/login_page.dart';
+import 'package:shiftapp/presentation/profile/pages/change_password.dart';
 import 'package:shiftapp/presentation/resume/pages/resume_pages.dart';
 import 'package:shiftapp/presentation/settings/settings_screen.dart';
 import 'package:shiftapp/presentation/signup/pages/signup_page.dart';
@@ -26,9 +26,7 @@ import 'data/datasources/remote/logger/app_loogers.dart';
 import 'di/remote_module.dart';
 import 'main_index.dart';
 
-
 import 'dart:async';
-
 
 /// Create a [AndroidNotificationChannel] for heads up notifications
 AndroidNotificationChannel? channel;
@@ -52,14 +50,12 @@ void main() async {
 
   // HttpOverrides.global = new MyHttpOverrides();
 
-
- FirebaseMessaging.onBackgroundMessage(kFirebaseMessagingBackgroundHandler);
+  FirebaseMessaging.onBackgroundMessage(kFirebaseMessagingBackgroundHandler);
 
   kInitMessagingHandler();
 
-  runApp( const RestartWidget(child: MyApp()));
+  runApp(const RestartWidget(child: MyApp()));
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -69,7 +65,7 @@ class MyApp extends StatelessWidget {
     final localRepo = getKoin().get<LocalRepository>();
     kInitMessageNotifier(context, localRepo.getLocal());
 
-    return  GetMaterialApp(
+    return GetMaterialApp(
       theme: ThemeData(
           backgroundColor: Colors.white,
           scaffoldBackgroundColor: Colors.white,
@@ -89,7 +85,7 @@ class MyApp extends StatelessWidget {
             },
           ),
           focusColor: Colors.amber),
-      locale:  Locale(localRepo.getLocal()),
+      locale: Locale(localRepo.getLocal()),
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -111,24 +107,18 @@ Future onSelectNotification(payload) async {
   Map valueMap = json.decode(payload);
 
   print('onSelectNotification ${valueMap}');
-  final type = valueMap.containsKey('type') ? valueMap['type']:'';
-  final referenceId = valueMap.containsKey('referenceId') ? valueMap['referenceId']:'';
-
-
-
-
+  final type = valueMap.containsKey('type') ? valueMap['type'] : '';
+  final referenceId =
+      valueMap.containsKey('referenceId') ? valueMap['referenceId'] : '';
 }
 
 final routes = {
   LoginPage.routeName: (context) => LoginPage(),
   MyHomePage.routeName: (context) => const MyHomePage(),
   AppliedOffersPage.routeName: (context) => const AppliedOffersPage(),
-  ResumePages.routeName: (context) =>  ResumePages(),
-  SettingsScreen.routeName: (context) =>  SettingsScreen(),
+  ResumePages.routeName: (context) => ResumePages(),
+  SettingsScreen.routeName: (context) => SettingsScreen(),
   SplashScreen.routeName: (context) => SplashScreen(),
   SignupPage.routeName: (context) => SignupPage(),
+  ChangePasswordScreen.routeName: (context) => ChangePasswordScreen(),
 };
-
-
-
-
