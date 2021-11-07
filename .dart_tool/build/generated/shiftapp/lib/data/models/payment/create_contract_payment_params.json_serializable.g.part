@@ -1,0 +1,24 @@
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+CreateContractPaymentParams _$CreateContractPaymentParamsFromJson(
+    Map<String, dynamic> json) {
+  return CreateContractPaymentParams(
+    contractId: json['contractId'] as String?,
+    transportaionId: json['transportaionId'] as String?,
+    bankCheckOutId: json['bankCheckOutId'] as String?,
+    resourcePath: json['resourcePath'] as String?,
+    paymentType: json['paymentType'] as String?,
+  );
+}
+
+Map<String, dynamic> _$CreateContractPaymentParamsToJson(
+        CreateContractPaymentParams instance) =>
+    <String, dynamic>{
+      'contractId': instance.contractId,
+      'transportaionId': instance.transportaionId,
+      'bankCheckOutId': instance.bankCheckOutId,
+      'resourcePath': instance.resourcePath,
+      'paymentType': instance.paymentType,
+    };
