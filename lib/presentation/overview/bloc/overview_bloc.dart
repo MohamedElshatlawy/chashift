@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:developer' as developer;
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:shiftapp/data/datasources/remote/api_exception.dart';
 import 'package:shiftapp/data/datasources/remote/resume_not_complete_exception.dart';
 import 'package:shiftapp/data/repositories/joboffers/job_offers_repository.dart';
 import 'package:shiftapp/data/repositories/login/auth_repository.dart';
 import 'package:shiftapp/data/repositories/user/user_repository.dart';
+import 'package:shiftapp/domain/applied_offer.dart';
 import 'package:shiftapp/domain/opportunities_status.dart';
 import 'package:shiftapp/presentation/common/common_state.dart';
 import 'dart:async';
@@ -29,6 +31,24 @@ class OverviewBloc extends Bloc<OverviewEvents, CommonState> {
     await super.close();
   }
 
+
+  StreamState<AppliedOffer>  currentShiftState= StreamStateInitial() ;
+
+  fetchCurrentShift() async {
+    try{
+      final response  =await _offersRepository.fetchCurrentShift();
+      if(response !=null){
+        currentShiftState.setData(response);
+      }else{
+        currentShiftState.setError(ApiException("",""));
+
+      }
+    } catch(e){
+      currentShiftState.setError(e);
+
+    }
+    return currentShiftState ;
+  }
 
 
   @override

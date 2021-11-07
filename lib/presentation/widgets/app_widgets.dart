@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shiftapp/presentation/resources/colors.dart';
+import 'package:shiftapp/presentation/resources/constants.dart';
 
 class AppWidgets{
 
@@ -30,7 +31,7 @@ AppBar kAppBar(BuildContext context,
         : Container(),
     elevation: 0,
     centerTitle: true,
-    title: Text(title),
+    title: Text(title, style: kTextSemiBold.copyWith(color: Colors.white),),
     backgroundColor: kPrimary,
   );
 }

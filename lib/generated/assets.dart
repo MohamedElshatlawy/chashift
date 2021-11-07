@@ -11,6 +11,7 @@ class Assets {
   static const String imagesGender = 'images/gender.png';
   static const String imagesHeight = 'images/height.png';
   static const String imagesId = 'images/id.png';
+  static const String imagesLogo = 'images/logo.png';
   static const String imagesMapMarker = 'images/map_marker.png';
   static const String imagesMapPin = 'images/map_pin.png';
   static const String imagesMarkerRec = 'images/marker_rec.png';

@@ -21,7 +21,7 @@ class _ProfileAPI implements ProfileAPI {
     final queryParameters = <String, dynamic>{};
     final _data = FormData();
     _data.files.add(MapEntry(
-        'file',
+        'ProfileImage',
         MultipartFile.fromFileSync(image.path,
             filename: image.path.split(Platform.pathSeparator).last)));
     final _result = await _dio.fetch<Map<String, dynamic>>(

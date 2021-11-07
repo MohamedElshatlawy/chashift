@@ -16,9 +16,10 @@ import 'package:shiftapp/presentation/widgets/dialogs_manager.dart';
 import 'package:shiftapp/presentation/widgets/error_handler_widget.dart';
 import 'package:shiftapp/presentation/widgets/loading_widget.dart';
 import 'package:shiftapp/presentation/widgets/material_text.dart';
-class ProfileScreen extends StatefulWidget {
 
-  const ProfileScreen({required ProfileBloc profileBloc})  : _profileBloc = profileBloc;
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({required ProfileBloc profileBloc})
+      : _profileBloc = profileBloc;
 
   final ProfileBloc _profileBloc;
 
@@ -34,7 +35,6 @@ class ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
@@ -49,36 +49,45 @@ class ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       body: BlocBuilder<ProfileBloc, CommonState>(
           bloc: widget._profileBloc,
-          buildWhen: (c,state){
-            return state is Initialized<User> || state is  LoadingState || state is  ErrorState  ;
+          buildWhen: (c, state) {
+            return state is Initialized<User> ||
+                state is LoadingState ||
+                state is ErrorState;
           },
-          builder: (BuildContext context, CommonState currentState,) {
+          builder: (
+            BuildContext context,
+            CommonState currentState,
+          ) {
             print('LOADING STATE ${currentState}');
             if (currentState is LoadingState) {
               return LoadingView();
             }
             if (currentState is ErrorState) {
-              return ErrorPlaceHolderWidget(exception: currentState.error,);
+              return ErrorPlaceHolderWidget(
+                exception: currentState.error,
+              );
             }
-             if (currentState is Initialized<User>) {
+            if (currentState is Initialized<User>) {
               return BlocListener<ProfileBloc, CommonState>(
                 bloc: widget._profileBloc,
-  listener: (context, state) {
-      if (state is LoadingDialogState) {
-      progress.show();
-      }
-      if (state is ErrorDialogState) {
-        print('ON GET ERROR DIALOG ');
+                listener: (context, state) {
+                  if (state is LoadingDialogState) {
+                    progress.show();
+                  }
+                  if (state is FinishedDialogState) {
                     progress.dismiss();
-DialogsManager.showErrorDialog(context,( state).toString() );
-      }
-  },
-  child: buildProfileUI(currentState.data),
-);
+                  }
+                  if (state is ErrorDialogState) {
+                    print('ON GET ERROR DIALOG ');
+                    progress.dismiss();
+                    DialogsManager.showErrorDialog(context, (state).toString());
+                  }
+                },
+                child: buildProfileUI(currentState.data),
+              );
             }
 
             return const Center();
-
           }),
     );
   }
@@ -88,28 +97,28 @@ DialogsManager.showErrorDialog(context,( state).toString() );
   }
 
   Widget buildProfileUI(User profileData) {
+    return LayoutBuilder(builder: (context, constraints) {
+      final strings = context.getStrings();
 
-    return
-      LayoutBuilder(builder: (context, constraints) {
-        final strings= context.getStrings();
-
-        return  SingleChildScrollView(
+      return SingleChildScrollView(
         child: ConstrainedBox(
           constraints: BoxConstraints(
               minWidth: constraints.maxWidth, minHeight: constraints.maxHeight),
-
           child: IntrinsicHeight(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Spacer(flex: 1,),
-
+                const Spacer(
+                  flex: 1,
+                ),
                 Container(
                   width: 100,
-                  child:   ProfileImagePicker(onPickImage: (file){
-                    widget._profileBloc.add(UpdateProfileImage(file));
-                  },),
+                  child: ProfileImagePicker(
+                    onPickImage: (file) {
+                      widget._profileBloc.add(UpdateProfileImage(file));
+                    },
+                  ),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
@@ -118,34 +127,47 @@ DialogsManager.showErrorDialog(context,( state).toString() );
                     ),
                   ),
                 ),
-
-                const SizedBox(height: 10,),
-
-                buildProfileItem(
-                    profileData.name.toString(), icon: const Icon(Icons.person,color: kAccent,)),
-                buildProfileItem(
-                    profileData.email.toString(), icon: const Icon(Icons.email,color: kAccent,)),
+                const SizedBox(
+                  height: 10,
+                ),
+                buildProfileItem(profileData.name.toString(),
+                    icon: const Icon(
+                      Icons.person,
+                      color: kAccent,
+                    )),
+                buildProfileItem(profileData.email.toString(),
+                    icon: const Icon(
+                      Icons.email,
+                      color: kAccent,
+                    )),
                 InkWell(
-                  onTap: (){
+                  onTap: () {
                     //Navigator.pushNamed(context, ChangePasswordScreen.routeName);
                   },
-                child : buildProfileItem(
-                   strings.change_password, icon: const Icon(Icons.vpn_key,color: kAccent,)),
+                  child: buildProfileItem(strings.change_password,
+                      icon: const Icon(
+                        Icons.vpn_key,
+                        color: kAccent,
+                      )),
                 ),
                 InkWell(
-                  onTap: (){
-                    DialogsManager.showLogoutDialog(context, onClickOk: (){
+                  onTap: () {
+                    DialogsManager.showLogoutDialog(context, onClickOk: () {
                       widget._profileBloc.add(LogoutEvent());
-                      Navigator.pushNamedAndRemoveUntil(context, LoginPage.routeName, (route) => false);
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, LoginPage.routeName, (route) => false);
                     });
                   },
-                child : buildProfileItem(
-                   strings.logout,
-                    color: Colors.red,
-                    icon: const Icon(Icons.logout,color: Colors.red,)),
+                  child: buildProfileItem(strings.logout,
+                      color: Colors.red,
+                      icon: const Icon(
+                        Icons.logout,
+                        color: Colors.red,
+                      )),
                 ),
-                const Spacer(flex: 2,),
-
+                const Spacer(
+                  flex: 2,
+                ),
               ],
             ),
           ),
@@ -154,20 +176,22 @@ DialogsManager.showErrorDialog(context,( state).toString() );
     });
   }
 
-  buildProfileItem(String data, {required Widget icon,Color color = Colors.black}) {
-    return    MaterialText(data.toString(),
-      padding: const EdgeInsets.all(12)
-      ,margin: const EdgeInsets.all(12),
-      style: kTextLabel.copyWith(color:color ),
+  buildProfileItem(String data,
+      {required Widget icon, Color color = Colors.black}) {
+    return MaterialText(
+      data.toString(),
+      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.all(12),
+      style: kTextLabel.copyWith(color: color),
       startIconPadding: const EdgeInsetsDirectional.only(end: 8),
-      startIcon: icon
-      ,decoration: Decorations.createRectangleDecoration(),);
+      startIcon: icon,
+      decoration: Decorations.createRectangleDecoration(),
+    );
   }
-
 }
 
 class ProfileImagePicker extends StatefulWidget {
-  final Function(File) onPickImage ;
+  final Function(File) onPickImage;
 
   const ProfileImagePicker({required this.onPickImage});
   @override
@@ -176,30 +200,40 @@ class ProfileImagePicker extends StatefulWidget {
   }
 }
 
-
 // ignore: must_be_immutable
 class _ProfileImagePickerState extends State<ProfileImagePicker> {
- final _picker = ImagePicker();
-   XFile? pickedFile ;
-   File ?file ;
+  final _picker = ImagePicker();
+  XFile? pickedFile;
+  File? file;
 
   pickImage() async {
     pickedFile = await _picker.pickImage(source: ImageSource.camera);
-    widget.onPickImage(file!);
 
     setState(() {
       file = File(pickedFile!.path);
+      widget.onPickImage(file!);
     });
   }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return    InkWell(child
-        :  pickedFile==null ?  const CircleAvatar(child:
-    Icon(Icons.person, size: 40,), radius: 36,): CircleAvatar(backgroundImage:FileImage(file!) , radius: 36,),
-      onTap: (){
+    return InkWell(
+      child: pickedFile == null
+          ? const CircleAvatar(
+              child: Icon(
+                Icons.person,
+                size: 40,
+              ),
+              radius: 36,
+            )
+          : CircleAvatar(
+              backgroundImage: FileImage(file!),
+              radius: 36,
+            ),
+      onTap: () {
         pickImage();
-      }, )
-    ;
+      },
+    );
   }
 }

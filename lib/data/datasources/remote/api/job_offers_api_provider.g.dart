@@ -116,6 +116,25 @@ class _JobOffersAPI implements JobOffersAPI {
     return value;
   }
 
+  @override
+  Future<ApiResponse<AppliedOffer>> fetchCurrentShift() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(_setStreamType<
+        ApiResponse<AppliedOffer>>(Options(
+            method: 'GET', headers: <String, dynamic>{}, extra: _extra)
+        .compose(_dio.options,
+            '/FreeLanceApplyOpportunities/GetCurrentFreeLanceApplyOpportunitiesForMob',
+            queryParameters: queryParameters, data: _data)
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ApiResponse<AppliedOffer>.fromJson(
+      _result.data!,
+      (json) => AppliedOffer.fromJson(json as Map<String, dynamic>),
+    );
+    return value;
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||

@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:koin_flutter/src/widget_extension.dart';
@@ -13,7 +14,9 @@ import 'package:shiftapp/presentation/resources/constants.dart';
 import 'package:shiftapp/presentation/resume/pages/resume_pages.dart';
 import 'package:shiftapp/presentation/settings/settings_screen.dart';
 import 'package:shiftapp/presentation/widgets/app_widgets.dart';
+import 'package:shiftapp/presentation/widgets/dialogs_manager.dart';
 import 'package:shiftapp/presentation/widgets/material_text.dart';
+import 'package:shiftapp/utils/notification.dart';
 
 import '../../main.dart';
 
@@ -34,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> _widgetOptions = <Widget>[
     const OverviewPage(),
      JobsOffersScreen(),
-    ProfilePage()
+     AppliedOffersPage()
   ];
 
   void _onItemTapped(int index) {
@@ -97,8 +100,15 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
 
                     buildDrawerItem(
+                        title:  context.getStrings().profile,
+                        icon: const Icon(Icons.person,color: kAccent,),
+                        onTap: () {
+                          Navigator.pushNamed(context, ProfilePage.routeName);
+                          showAWNotification();
+                        }),
+                    buildDrawerItem(
                         title:  context.getStrings().applied_jobs,
-                        icon: const Icon(Icons.work_rounded,color: kAccent,),
+                        icon: const Icon(Icons.date_range,color: kAccent,),
                         onTap: () {
                           Navigator.pushNamed(context, AppliedOffersPage.routeName);
                         }),
@@ -151,9 +161,9 @@ class _MyHomePageState extends State<MyHomePage> {
               label: context.getStrings().jobs),
           BottomNavigationBarItem(
               icon: const Icon(
-                Icons.person,
+                Icons.date_range,
               ),
-              label: strings.profile),
+              label: strings.working_hours),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: kPrimaryDark,

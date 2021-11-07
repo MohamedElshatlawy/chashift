@@ -6,11 +6,15 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shiftapp/data/datasources/remote/api_exception.dart';
+import 'package:shiftapp/data/datasources/remote/resume_not_complete_exception.dart';
 import 'package:shiftapp/data/exceptions/app_exception.dart';
 import 'package:shiftapp/data/repositories/local/local_repository.dart';
+import 'package:shiftapp/presentation/common/extensions.dart';
+import 'package:shiftapp/presentation/profile/pages/profile_page.dart';
 import 'package:shiftapp/presentation/resources/colors.dart';
 import 'package:shiftapp/presentation/resources/constants.dart';
 import 'package:shiftapp/presentation/resources/resources.dart';
+import 'package:shiftapp/presentation/resume/pages/resume_pages.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'base_dialog_widget.dart';
@@ -73,7 +77,7 @@ class DialogsManager {
   }
   static handleErrorDialogBuilder(BuildContext context  ,dynamic exception){
     String getErrorMessage() {
-
+      final strings = context.getStrings();
       if (exception is DioError) {
         return (exception ).message;
       }
@@ -81,19 +85,29 @@ class DialogsManager {
         return (exception ).message;
       }
       if (exception is AppException) {
-        return (exception ).messageEn;
+
+        return context.isRTL()? (exception ).messageAr :(exception ).messageEn;
       }
+
+      if(exception is ResumeNotCompletedException){
+        return strings .complete_cv;
+
+      }
+
       if (exception is SocketException) {
-        'context.getStrings().error_internet_connection';
+       return strings .error_internet_connection;
       }
       if (exception is WebSocketException || exception is HandshakeException) {
-        return 'context.getStrings().check_network_connection';
+        return strings .error_internet_connection;
       }
 
       return exception.toString();
     }
-
-    showErrorDialog(context, getErrorMessage());
+    if(exception is ResumeNotCompletedException){
+      showErrorDialogWithButton(context ,getErrorMessage());
+    }else {
+      showErrorDialog(context, getErrorMessage());
+    }
   }
   static showErrorDialog(BuildContext context, String text) {
     AlertDialog alert = AlertDialog(
@@ -104,6 +118,60 @@ class DialogsManager {
           },
           child: Text(
             'Ok',
+            style: kTextBold.copyWith(color: kPrimary, fontSize: 14),
+          ),
+        )
+      ],
+      content: Container(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              height: 80,
+              child: Image.asset(
+                'images/error.gif',
+                height: 80,
+              ),
+            ),
+            Text(
+              text,
+              style: kTextSemiBold.copyWith(color: kFontDark, fontSize: 12),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+      await showDialog(
+        barrierDismissible: true,
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+    });
+  }
+  static showErrorDialogWithButton(BuildContext context, String text) {
+    AlertDialog alert = AlertDialog(
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text(
+            context.getStrings().ok_button,
+            style: kTextBold.copyWith(color: Colors.grey, fontSize: 14),
+          ),
+        )
+        ,
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.pushNamed(context, ResumePages.routeName);
+          },
+          child: Text(
+             context.getStrings().complete_cv,
             style: kTextBold.copyWith(color: kPrimary, fontSize: 14),
           ),
         )
@@ -251,7 +319,7 @@ class DialogsManager {
             }
           },
           child: Text(
-            'ok',
+            context.getStrings().ok_button,
             style: kTextBold.copyWith(color: kPrimaryDark, fontSize: 14),
           ),
         )

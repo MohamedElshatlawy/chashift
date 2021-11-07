@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'colors.dart';
 
 const kSendButtonTextStyle = TextStyle(
@@ -283,3 +284,8 @@ const kCountryCodeList = [
   '+965',
   '+962'
 ];
+
+kHideKeyboard(){
+  SystemChannels.textInput.invokeMethod('TextInput.hide');
+
+}

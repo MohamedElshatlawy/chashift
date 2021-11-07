@@ -14,6 +14,7 @@ import 'package:shiftapp/data/repositories/local/local_repository.dart';
 import 'package:shiftapp/presentation/appliedoffers/pages/appliedoffers_pages.dart';
 import 'package:shiftapp/presentation/home/home.dart';
 import 'package:shiftapp/presentation/login/pages/login_page.dart';
+import 'package:shiftapp/presentation/profile/index.dart';
 import 'package:shiftapp/presentation/resume/pages/resume_pages.dart';
 import 'package:shiftapp/presentation/settings/settings_screen.dart';
 import 'package:shiftapp/presentation/signup/pages/signup_page.dart';
@@ -122,7 +123,8 @@ Future onSelectNotification(payload) async {
 final routes = {
   LoginPage.routeName: (context) => LoginPage(),
   MyHomePage.routeName: (context) => const MyHomePage(),
-  AppliedOffersPage.routeName: (context) => const AppliedOffersPage(),
+  ProfilePage.routeName: (context) =>  ProfilePage(),
+  AppliedOffersPage.routeName: (context) => const AppliedOffersPage(hasBar: true,),
   ResumePages.routeName: (context) =>  ResumePages(),
   SettingsScreen.routeName: (context) =>  SettingsScreen(),
   SplashScreen.routeName: (context) => SplashScreen(),

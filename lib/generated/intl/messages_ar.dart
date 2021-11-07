@@ -32,12 +32,20 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("تغيير اللغة"),
         "change_password":
             MessageLookupByLibrary.simpleMessage("تغيير كلمة المرور"),
+        "complete_cv": MessageLookupByLibrary.simpleMessage(
+            "برجاء استكمال بيانات السيرة الذاتية"),
+        "complete_profile":
+            MessageLookupByLibrary.simpleMessage("إستكمال السيرة الذاتية"),
         "current_shift": MessageLookupByLibrary.simpleMessage("العمل الحالي"),
         "dont_have_acount":
             MessageLookupByLibrary.simpleMessage("ليس لديك حساب ؟ سجل الان"),
         "email": MessageLookupByLibrary.simpleMessage("البريد الإلكتروني"),
+        "error_internet_connection":
+            MessageLookupByLibrary.simpleMessage("خطأ في الاتصال بالشبكة"),
         "female": MessageLookupByLibrary.simpleMessage("انثي"),
         "finish": MessageLookupByLibrary.simpleMessage("إنهاء الدوام"),
+        "finish_shift_label":
+            MessageLookupByLibrary.simpleMessage("إنهاء الدوام لفترة عمل "),
         "finished": MessageLookupByLibrary.simpleMessage("منتهية"),
         "gender": MessageLookupByLibrary.simpleMessage("الجنس"),
         "have_account":
@@ -73,6 +81,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "name_ar": MessageLookupByLibrary.simpleMessage("الاسم بالعربي"),
         "name_en": MessageLookupByLibrary.simpleMessage("الاسم بالانجليزية"),
         "new_jobs": MessageLookupByLibrary.simpleMessage("عروض جديدة"),
+        "ok_button": MessageLookupByLibrary.simpleMessage("حسناً"),
+        "open_location": MessageLookupByLibrary.simpleMessage(
+            "يجب تشغيل خدمة الموقع للتأكد من وجودك في موقع العمل"),
         "overview": MessageLookupByLibrary.simpleMessage("نظره عامه"),
         "password": MessageLookupByLibrary.simpleMessage("كلمة المرور"),
         "phone": MessageLookupByLibrary.simpleMessage("رقم الهاتف"),
@@ -93,6 +104,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("اختر المؤهل "),
         "settings": MessageLookupByLibrary.simpleMessage("الإعدادات"),
         "start": MessageLookupByLibrary.simpleMessage("ابدء الدوام"),
+        "start_shift_label":
+            MessageLookupByLibrary.simpleMessage("بدء الدوام لفترة عمل "),
         "tall": MessageLookupByLibrary.simpleMessage("Tall"),
         "to": MessageLookupByLibrary.simpleMessage("لـ"),
         "weight": MessageLookupByLibrary.simpleMessage("الوزر"),

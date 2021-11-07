@@ -40,7 +40,12 @@ class StartShiftEvent extends AppliedOffersEvents {
 
       double distanceInMeters = Geolocator.distanceBetween(position.latitude,position.longitude,appliedOffers.latitude!,appliedOffers.longtude!);
       print(' _determinePosition ${position}  =>   meters ${distanceInMeters} > ${appliedOffers.latitude} , ${appliedOffers.longtude} = ${distanceInMeters > int.parse(appliedOffers.radius!)}');
+
+      final date = DateFormatter.dateFromString('${appliedOffers.workingDate} ${appliedOffers.opportunitiesStrartTime}' );
+      final minuts = DateFormatter.differenceNowByMinutes(date);
+      print('workingDate time ${date} => $minuts}');
       if(distanceInMeters > int.parse(appliedOffers.radius!)){
+        print('ErrorDialogState when change');
         yield ErrorDialogState(MistakeShiftLocationExceptions());
       }else
         if(appliedOffers.statusId == OpportunitiesStatus.Accept.index) {

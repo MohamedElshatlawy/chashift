@@ -22,7 +22,7 @@ abstract class ProfileAPI {
 */
   @MultiPart()
   @POST('/FreeLancerInfo/UploadFreelancerProfileImage')
-  Future<ApiResponse<String>> uploadProfilePhoto(@Part(name: 'file') File  image);
+  Future<ApiResponse<String>> uploadProfilePhoto(@Part(name: 'ProfileImage') File  image);
 
 
 }

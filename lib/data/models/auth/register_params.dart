@@ -14,8 +14,10 @@ class RegisterParams {
   final  String? password;
   @JsonKey(name: 'gender')
   final  bool? gender;
+  @JsonKey(name: 'appId')
+  String? appId;
 
-  RegisterParams({this.nameEn, this.nameAr, this.email, this.password, this.gender});
+  RegisterParams({this.nameEn, this.nameAr, this.email, this.password, this.gender,this.appId});
 
   factory RegisterParams.fromJson(Map<String, dynamic> json) => _$RegisterParamsFromJson(json);
 

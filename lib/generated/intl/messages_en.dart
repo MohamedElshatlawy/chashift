@@ -22,6 +22,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "active": MessageLookupByLibrary.simpleMessage("Active"),
+        "add_notes": MessageLookupByLibrary.simpleMessage("Add your notes"),
         "age": MessageLookupByLibrary.simpleMessage("Age"),
         "applied_jobs": MessageLookupByLibrary.simpleMessage("Applied jobs"),
         "applied_opportunities":
@@ -33,12 +34,20 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Change language"),
         "change_password":
             MessageLookupByLibrary.simpleMessage("Change Password"),
+        "complete_cv":
+            MessageLookupByLibrary.simpleMessage("Please complete your CV"),
+        "complete_profile":
+            MessageLookupByLibrary.simpleMessage("Complete Profile"),
         "current_shift": MessageLookupByLibrary.simpleMessage("Current Shift"),
         "dont_have_acount": MessageLookupByLibrary.simpleMessage(
             "Don\\\'t have an account? Register now"),
         "email": MessageLookupByLibrary.simpleMessage("Email"),
+        "error_internet_connection":
+            MessageLookupByLibrary.simpleMessage("Error internet connection!"),
         "female": MessageLookupByLibrary.simpleMessage("Female"),
         "finish": MessageLookupByLibrary.simpleMessage("Finish"),
+        "finish_shift_label":
+            MessageLookupByLibrary.simpleMessage("Finish Shift for "),
         "finished": MessageLookupByLibrary.simpleMessage("Finished"),
         "gender": MessageLookupByLibrary.simpleMessage("Gender"),
         "have_account":
@@ -76,6 +85,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "name_ar": MessageLookupByLibrary.simpleMessage("Name in arabic"),
         "name_en": MessageLookupByLibrary.simpleMessage("Name in english"),
         "new_jobs": MessageLookupByLibrary.simpleMessage("New Jobs"),
+        "ok_button": MessageLookupByLibrary.simpleMessage("Ok"),
+        "open_location": MessageLookupByLibrary.simpleMessage(
+            "The location service must be turned on to ensure that you are on the job site"),
         "overview": MessageLookupByLibrary.simpleMessage("Overview"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
         "phone": MessageLookupByLibrary.simpleMessage("Phone Number"),
@@ -96,6 +108,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Select Qualification "),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "start": MessageLookupByLibrary.simpleMessage("Start"),
+        "start_shift_label":
+            MessageLookupByLibrary.simpleMessage("Start Shift for "),
         "tall": MessageLookupByLibrary.simpleMessage("Tall"),
         "to": MessageLookupByLibrary.simpleMessage("To"),
         "weight": MessageLookupByLibrary.simpleMessage("Weight"),

@@ -6,6 +6,7 @@ import 'package:shiftapp/domain/date_formatter.dart';
 import 'package:shiftapp/presentation/common/extensions.dart';
 import 'package:shiftapp/presentation/resources/colors.dart';
 import 'package:shiftapp/presentation/resources/constants.dart';
+import 'package:shiftapp/presentation/resources/validation.dart';
 import 'package:shiftapp/presentation/resume/bloc/resume_component_data.dart';
 import 'package:shiftapp/presentation/signup/pages/signup_screen.dart';
 import 'package:shiftapp/presentation/widgets/app_button.dart';
@@ -38,12 +39,12 @@ class ResumeScreen extends BaseWidget {
     final resume =  resumeComponentData.resume;
     birthDateController .text = resume.birthDateString!=null ?resume.birthDateString! : '';
     birthDate = resume.birthDateString!=null ?resume.birthDateString! : '';
-    bankNumber = resume.idBank!;
-    height =resume.length!.toString();
+   // bankNumber = resume.idBank.toString();
+    height =resume.length.toString();
     weight = resume.wieght.toString();
     whatsNumber = resume.whatsAppNumber.toString();
     phoneNumber = resume.phoneNumber.toString();
-    idNumber =resume.idNumber!;
+    idNumber =resume.idNumber.toString();
     const itemDecoration = kTextFieldDecoration;
     return SingleChildScrollView(
       child: Padding(
@@ -77,7 +78,7 @@ class ResumeScreen extends BaseWidget {
                     prefixIcon: buildIcon('images/smartphone.png')),
                 keyboardType: TextInputType.phone,
                 validator: (value) {
-                  if (value!.isEmpty) {
+                  if (value!.isEmpty && Validation.isValidPhone(value)) {
                     return strings.invalid_phone;
                   }
                   return null;
@@ -103,23 +104,23 @@ class ResumeScreen extends BaseWidget {
                   idNumber = t;
                 },
               ),
-              MaterialTextField(
-                initialValue: resume.idBank,
-                margin: const EdgeInsets.only(top: 16),
-                inputDecoration: itemDecoration.copyWith(
-                    hintText: strings.bank_iban,
-                    prefixIcon: buildIcon('images/credit_card.png')),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return strings.invalid_bank_id;
-                  }
-                  return null;
-                },
-                onChanged: (t) {
-                  bankNumber = t;
-                },
-              ),
+              // MaterialTextField(
+              //   initialValue: resume.idBank,
+              //   margin: const EdgeInsets.only(top: 16),
+              //   inputDecoration: itemDecoration.copyWith(
+              //       hintText: strings.bank_iban,
+              //       prefixIcon: buildIcon('images/credit_card.png')),
+              //   keyboardType: TextInputType.number,
+              //   validator: (value) {
+              //     if (value!.isEmpty) {
+              //       return strings.invalid_bank_id;
+              //     }
+              //     return null;
+              //   },
+              //   onChanged: (t) {
+              //     bankNumber = t;
+              //   },
+              // ),
               InkWell(
                 onTap: () async {
                   openDatePicker(context);
@@ -263,7 +264,7 @@ class ResumeScreen extends BaseWidget {
                 text: strings.save_button,
                 onPressed: () {
                   if(_formKey.currentState!.validate()&& cityId !=null &&qualifID!=null && enLevelId!=null && compLevelId!=null ){
-                    onPerformUpdate(UpdateResumeParams(cityId: cityId, birthDateString: birthDate , computerLevel: compLevelId,englishLevel: enLevelId,idBank: bankNumber,
+                    onPerformUpdate(UpdateResumeParams(cityId: cityId, birthDateString: birthDate , computerLevel: compLevelId,englishLevel: enLevelId,
                     idNumber: idNumber,length: int.parse(height),weight: int.parse(weight),phoneNumber: phoneNumber,qualificationId: qualifID,whatsAppNumber: whatsNumber));
                   }else{
                     if(cityId ==null ||qualifID==null || enLevelId==null || compLevelId==null ){

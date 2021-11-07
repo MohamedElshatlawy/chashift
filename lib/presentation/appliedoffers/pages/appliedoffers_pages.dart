@@ -8,7 +8,9 @@ import 'package:shiftapp/presentation/widgets/app_widgets.dart';
 
 class AppliedOffersPage extends StatelessWidget {
   static const routeName = '/appliedoffers';
-  const AppliedOffersPage({Key? key}) : super(key: key);
+  final bool ?  hasBar ;
+   const AppliedOffersPage({Key? key ,this.hasBar}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +25,7 @@ class AppliedOffersPage extends StatelessWidget {
                 icon: const Icon(Icons.arrow_back_ios_rounded),
                 color: Colors.white,
               ),
+              toolbarHeight: hasBar==true ? 80 :0,
               elevation: 0,
               centerTitle: true,
               title: Text(context.getStrings().working_hours , style: kTextSemiBold.copyWith(color: Colors.white),),
@@ -30,8 +33,9 @@ class AppliedOffersPage extends StatelessWidget {
               bottom:  TabBar(
                 indicatorColor: kPrimary,
                 indicatorSize: TabBarIndicatorSize.label,
+                labelStyle: kTextLabel,
                 tabs: [
-                  Tab(text: context.getStrings().active),
+                  Tab(text: context.getStrings().active,),
                   Tab(text: context.getStrings().finished)
                 ],
               ),

@@ -1,4 +1,5 @@
 import 'package:ars_dialog/ars_dialog.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,11 +32,11 @@ class SignupScreen extends BaseWidget {
   SignupScreen({Key? key, required this.performLogin}) : super(key: key);
 
   getFcmToken() {
-    /* FirebaseMessaging.instance.getToken().then((token) {
+     FirebaseMessaging.instance.getToken().then((token) {
       fcmToken = token ;
       print("FCM TOKEN IS  $token"); // Print the Token in Console
     });
-*/
+
   }
 
   @override
@@ -147,7 +148,7 @@ class SignupScreen extends BaseWidget {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     performLogin(
-                        RegisterParams(email: email, password: password,gender: isMale,nameAr: nameAr,nameEn: nameEn));
+                        RegisterParams(email: email, password: password,gender: isMale,nameAr: nameAr,nameEn: nameEn,appId: fcmToken));
                   }
                 },
               ),

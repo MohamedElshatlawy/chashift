@@ -59,6 +59,7 @@ class UpdateProfileImage extends ProfileEvent{
       print('ON ERROR DIALOG STATE ${e}');
       yield ErrorDialogState(e);
     }
+    yield FinishedDialogState();
 
   }
 

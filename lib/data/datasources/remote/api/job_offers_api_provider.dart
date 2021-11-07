@@ -32,7 +32,7 @@ abstract class JobOffersAPI {
   Future<ApiResponse<String>> finishShift(@Body() EndShiftParams shiftParams);
 
 
-/*  @GET('/OpportunitiesAvailble/CheckFreeLanceApplyOpportunityAvailbleByIdForMob')
-  Future<ApiResponse<String>> applyJob(@Query('Id') int id );*/
+  @GET('/FreeLanceApplyOpportunities/GetCurrentFreeLanceApplyOpportunitiesForMob')
+  Future<ApiResponse<AppliedOffer>> fetchCurrentShift();
 
 }

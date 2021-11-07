@@ -100,7 +100,7 @@ class LoginScreen extends BaseWidget {
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   performLogin(
-                      LoginParams(email: email, password: password, appId: ""));
+                      LoginParams(email: email, password: password, appId: fcmToken));
                 }
               },
             ),
