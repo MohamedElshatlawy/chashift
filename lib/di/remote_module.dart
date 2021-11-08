@@ -33,7 +33,7 @@ final remoteModule = Module()
   ..factory((scope) => JobOffersAPI(scope.get<ClientCreator>().create()))
   ..factory((scope) => JobOffersRepository(scope.get()))
   ..factory((scope) => ResumeAPI(scope.get<ClientCreator>().create()))
-  ..factory((scope) => ProfileRepository(scope.get()))
+  ..factory((scope) => ProfileRepository(scope.get(), scope.get()))
   ..factory((scope) => ResumeRepository(scope.get<ResumeAPI>()));
 
 final blocsModule = Module()

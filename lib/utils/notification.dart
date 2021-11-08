@@ -1,14 +1,96 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shiftapp/main.dart';
+import 'package:awesome_notifications/awesome_notifications.dart' as aw;
+import 'package:awesome_notifications/awesome_notifications.dart' ;
 
 
+const CONFIRM_CHANNEL_KEY = "confirmation_shift";
+const CONFIRM_GROUP_KEY ="confirmation_shift_group";
+
+requestNotificationPermission(){
+  AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+    if (!isAllowed) {
+      // Insert here your friendly dialog box before call the request method
+      // This is very important to not harm the user experience
+      AwesomeNotifications().requestPermissionToSendNotifications();
+    }
+  });
+}
+initAwesNotif(){
+  AwesomeNotifications().initialize(
+    // set the icon to null if you want to use the default app icon
+      'resource://drawable/logo',
+      [
+        NotificationChannel(
+          channelKey: CONFIRM_CHANNEL_KEY,
+          channelName: 'Basic notifications',
+          channelDescription: 'Notification channel for basic tests',
+          ledColor: Colors.white,
+          channelShowBadge: true,
+          groupKey: CONFIRM_GROUP_KEY,
+          groupSort: aw.GroupSort.Asc,
+          groupAlertBehavior: aw.GroupAlertBehavior.Children,
+          importance: NotificationImportance.High,
+
+        )
+      ]
+  );
+
+  AwesomeNotifications().actionStream.listen(
+          (receivedNotification){
+
+            print('on CLICK NOTIFICATION ${receivedNotification.title}');
+  }
+  );
+}
+
+void showAWNotification(){
+  AwesomeNotifications().createNotification(
+      content: NotificationContent(
+          id: Random().nextInt(100),
+          channelKey: CONFIRM_CHANNEL_KEY,
+          title: 'Simple Notification',
+          body: 'hi every body',
+        groupKey: CONFIRM_GROUP_KEY,
+        displayOnForeground: true,
+        showWhen: true,
+        autoDismissable: false,
+        displayOnBackground: true,
+      ),
+    actionButtons: [
+      NotificationActionButton(key: 'key', label: 'Confirm',buttonType: ActionButtonType.KeepOnTop,)
+    ]
+  );
+}
+void kShowNotification(){
+  flutterLocalNotificationsPlugin!.show(
+    1,
+    'notification.title',
+    'notification.body',
+
+    NotificationDetails(
+      android: AndroidNotificationDetails(
+          channel!.id,
+          channel!.name,
+          channelShowBadge: true,
+          channelDescription: channel?.description,
+         usesChronometer: true,
+          largeIcon:DrawableResourceAndroidBitmap('logo'),
+        //  add a proper drawable resource to android, for now using
+        //      one that already exists in example app.
+      ),
+    ),
+    );
+}
 
 Future<void> kFirebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
@@ -20,7 +102,7 @@ Future<void> kFirebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
   kInitMessagingHandler() async {
 
-
+  initAwesNotif();
     if (!kIsWeb) {
       channel = const AndroidNotificationChannel(
         'Shiftcash_channel', // id
@@ -187,4 +269,6 @@ Future<void> kFirebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 
   }
+
+
 

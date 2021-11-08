@@ -13,6 +13,7 @@ RegisterParams _$RegisterParamsFromJson(Map<String, dynamic> json) {
     email: json['email'] as String?,
     password: json['password'] as String?,
     gender: json['gender'] as bool?,
+    appId: json['appId'] as String?,
   );
 }
 
@@ -23,4 +24,5 @@ Map<String, dynamic> _$RegisterParamsToJson(RegisterParams instance) =>
       'email': instance.email,
       'password': instance.password,
       'gender': instance.gender,
+      'appId': instance.appId,
     };

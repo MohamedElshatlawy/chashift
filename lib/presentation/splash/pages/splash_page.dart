@@ -28,7 +28,7 @@ class SplashScreen extends StatelessWidget {
     navigateToNext(userRepo.isLogged(), context);
     return Scaffold(
       body: Container(
-        child: Center(child: Image.asset("images/map_marker.png",height:100 ,)),
+        child: Center(child: Image.asset("images/logo.png",height:100 ,)),
       ),
     );
   }

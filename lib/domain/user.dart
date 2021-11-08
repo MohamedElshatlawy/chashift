@@ -1,4 +1,5 @@
-import 'package:json_annotation/json_annotation.dart'; 
+import 'package:json_annotation/json_annotation.dart';
+import 'package:shiftapp/data/datasources/remote/remote_constants.dart';
 
 part 'user.g.dart'; 
 
@@ -9,7 +10,7 @@ class User {
   @JsonKey(name: 'name')
   final  String? name;
   @JsonKey(name: 'profileImagePath')
-  final  String? profileImagePath;
+    String? profileImagePath;
   @JsonKey(name: 'isCompeleteProfile')
   final  bool? isCompeleteProfile;
   @JsonKey(name: 'email')
@@ -22,5 +23,9 @@ class User {
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserToJson(this);
+
+  String getImagePath(){
+    return '$kServerUrl$profileImagePath';
+  }
 }
 

@@ -1,4 +1,5 @@
-import 'package:json_annotation/json_annotation.dart'; 
+import 'package:json_annotation/json_annotation.dart';
+import 'package:shiftapp/domain/date_formatter.dart';
 
 part 'applied_offer.g.dart'; 
 
@@ -36,5 +37,28 @@ class AppliedOffer {
   factory AppliedOffer.fromJson(Map<String, dynamic> json) => _$AppliedOfferFromJson(json);
 
   Map<String, dynamic> toJson() => _$AppliedOfferToJson(this);
+
+  String startTime(){
+    return DateFormatter.formatDateString(opportunitiesStrartTime, DateFormatter.HOUR_MINUT_SEC ,'HH:mm');
+  }
+  String finishTime(){
+    return DateFormatter.formatDateString(opportunitiesEndTime, DateFormatter.HOUR_MINUT_SEC ,'HH:mm');
+  }
+
+  DateTime finishedDateTime(){
+    final date = DateFormatter.dateFromString('${workingDate} ${opportunitiesEndTime}' );
+    print('DATE NOW ${DateTime.now()}');
+    print('fetchfinishedDateTime $date');
+
+    //  final remainingTime = DateFormatter.differenceNowByMinutes(date);
+    return date ;
+  }
+
+  int remainingTimeFinish(){
+    finishedDateTime();
+    final date = DateFormatter.dateFromString('${workingDate} ${opportunitiesEndTime}' );
+    return DateFormatter.differenceNowBySecond(date);
+  }
+
 }
 

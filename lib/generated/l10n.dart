@@ -639,6 +639,126 @@ class S {
       args: [],
     );
   }
+
+  /// `Error internet connection!`
+  String get error_internet_connection {
+    return Intl.message(
+      'Error internet connection!',
+      name: 'error_internet_connection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please complete your CV`
+  String get complete_cv {
+    return Intl.message(
+      'Please complete your CV',
+      name: 'complete_cv',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ok`
+  String get ok_button {
+    return Intl.message(
+      'Ok',
+      name: 'ok_button',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Complete Profile`
+  String get complete_profile {
+    return Intl.message(
+      'Complete Profile',
+      name: 'complete_profile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The location service must be turned on to ensure that you are on the job site`
+  String get open_location {
+    return Intl.message(
+      'The location service must be turned on to ensure that you are on the job site',
+      name: 'open_location',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Finish Shift for `
+  String get finish_shift_label {
+    return Intl.message(
+      'Finish Shift for ',
+      name: 'finish_shift_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start Shift for `
+  String get start_shift_label {
+    return Intl.message(
+      'Start Shift for ',
+      name: 'start_shift_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add your notes`
+  String get add_notes {
+    return Intl.message(
+      'Add your notes',
+      name: 'add_notes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel`
+  String get cancel_button {
+    return Intl.message(
+      'Cancel',
+      name: 'cancel_button',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `are you sure you want to logout ?`
+  String get logout_message {
+    return Intl.message(
+      'are you sure you want to logout ?',
+      name: 'logout_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unknown error !`
+  String get undefine_error {
+    return Intl.message(
+      'Unknown error !',
+      name: 'undefine_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Check your network connection and try again`
+  String get check_network_connection {
+    return Intl.message(
+      'Check your network connection and try again',
+      name: 'check_network_connection',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

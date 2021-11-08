@@ -9,12 +9,12 @@ import 'package:shiftapp/presentation/common/common_state.dart';
 import 'package:shiftapp/presentation/common/extensions.dart';
 import 'package:shiftapp/presentation/login/pages/login_page.dart';
 import 'package:shiftapp/presentation/profile/bloc/profile_bloc.dart';
-import 'package:shiftapp/presentation/profile/pages/change_password.dart';
 import 'package:shiftapp/presentation/resources/colors.dart';
 import 'package:shiftapp/presentation/resources/constants.dart';
 import 'package:shiftapp/presentation/widgets/decorations.dart';
 import 'package:shiftapp/presentation/widgets/dialogs_manager.dart';
 import 'package:shiftapp/presentation/widgets/error_handler_widget.dart';
+import 'package:shiftapp/presentation/widgets/image_builder.dart';
 import 'package:shiftapp/presentation/widgets/loading_widget.dart';
 import 'package:shiftapp/presentation/widgets/material_text.dart';
 
@@ -75,6 +75,9 @@ class ProfileScreenState extends State<ProfileScreen> {
                   if (state is LoadingDialogState) {
                     progress.show();
                   }
+                  if (state is FinishedDialogState) {
+                    progress.dismiss();
+                  }
                   if (state is ErrorDialogState) {
                     print('ON GET ERROR DIALOG ');
                     progress.dismiss();
@@ -110,20 +113,11 @@ class ProfileScreenState extends State<ProfileScreen> {
                 const Spacer(
                   flex: 1,
                 ),
-                Container(
-                  width: 100,
-                  child: ProfileImagePicker(
-                    onPickImage: (file) {
-                      widget._profileBloc.add(UpdateProfileImage(file));
-                    },
-                  ),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: kWhiteF2,
-                      width: 3.0,
-                    ),
-                  ),
+                ProfileImagePicker(
+                  onPickImage: (file) {
+                    widget._profileBloc.add(UpdateProfileImage(file));
+                  },
+                  imagePath: profileData.getImagePath(),
                 ),
                 const SizedBox(
                   height: 10,
@@ -140,8 +134,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                     )),
                 InkWell(
                   onTap: () {
-                    Navigator.pushNamed(
-                        context, ChangePasswordScreen.routeName);
+                    //Navigator.pushNamed(context, ChangePasswordScreen.routeName);
                   },
                   child: buildProfileItem(strings.change_password,
                       icon: const Icon(
@@ -191,8 +184,9 @@ class ProfileScreenState extends State<ProfileScreen> {
 
 class ProfileImagePicker extends StatefulWidget {
   final Function(File) onPickImage;
+  final String imagePath;
 
-  const ProfileImagePicker({required this.onPickImage});
+  const ProfileImagePicker({required this.onPickImage ,required this.imagePath});
   @override
   _ProfileImagePickerState createState() {
     return _ProfileImagePickerState();
@@ -207,24 +201,20 @@ class _ProfileImagePickerState extends State<ProfileImagePicker> {
 
   pickImage() async {
     pickedFile = await _picker.pickImage(source: ImageSource.camera);
-    widget.onPickImage(file!);
 
     setState(() {
       file = File(pickedFile!.path);
+      widget.onPickImage(file!);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return InkWell(
       child: pickedFile == null
-          ? const CircleAvatar(
-              child: Icon(
-                Icons.person,
-                size: 40,
-              ),
-              radius: 36,
+          ?  CircleAvatar(
+        child: kBuildCircleImage(widget.imagePath,size: 80),
+        radius: 36,
             )
           : CircleAvatar(
               backgroundImage: FileImage(file!),

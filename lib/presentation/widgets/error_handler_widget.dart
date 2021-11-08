@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shiftapp/data/datasources/remote/api_exception.dart';
+import 'package:shiftapp/presentation/common/extensions.dart';
 import 'package:shiftapp/presentation/resources/colors.dart';
 import 'package:shiftapp/presentation/resources/constants.dart';
 
@@ -26,30 +29,33 @@ class ErrorPlaceHolderWidget extends StatelessWidget {
    String ?  message ;
    getErrorMessage(BuildContext context) {
 
-    if (exception is DioError) {
-      if ((exception as DioError ).error is SocketException) {
-        //placeHolderImage = Image.asset(Res.connection_error);
-        message =  'context.getStrings().error_internet_connection';
-      }
-     else if ((exception as DioError ).error is WebSocketException || exception is HandshakeException) {
-       // placeHolderImage = Image.asset(Res.connection_error);
-        message ='context.getStrings().error_internet_connection';
-      }else
-      message =  (exception as DioError ).message;
-    }
 
+     if (exception is DioError) {
+       if (exception.error is WebSocketException || exception.error is HandshakeException ) {
+         message = context.getStrings().error_internet_connection;
+       }
+       else if(exception.error is SocketException || exception.error is TimeoutException || exception.error is TimeoutException){
+         message = context.getStrings().error_internet_connection;
+       }
+       else if(exception.error is ApiException){
+         message = exception.message;
+       }else {
+         message = context.getStrings().undefine_error;
+       }
+     }
 
     if (exception is SocketException) {
      // placeHolderImage = Image.asset(Res.connection_error);
-     message ='context.getStrings().error_internet_connection';
+     message =context.getStrings().error_internet_connection;
     }
     if (exception is WebSocketException || exception is HandshakeException) {
      // placeHolderImage = Image.asset(Res.connection_error);
-     message ='context.getStrings().check_network_connection';
+     message =context.getStrings().check_network_connection;
     }
     if(error !=null ) message =error!;
-    if(message==null) 'خطأ غير معروف';
-  }
+    message ??= context.getStrings().undefine_error;
+
+   }
 
   @override
   Widget build(BuildContext context) {

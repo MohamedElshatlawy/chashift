@@ -1,6 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_countdown_timer/current_remaining_time.dart';
+import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
+import 'package:shiftapp/domain/applied_offer.dart';
 import 'package:shiftapp/presentation/appliedoffers/applied_offer_item.dart';
 import 'package:shiftapp/presentation/common/common_state.dart';
 import 'package:shiftapp/presentation/common/extensions.dart';
@@ -50,6 +55,7 @@ class OverviewPage extends StatelessWidget {
     );
   }
 }
+bool isFinishedShift = false ;
 
 class OverviewScreen extends BaseWidget {
   final OverviewComponents overviewComponents;
@@ -58,10 +64,17 @@ class OverviewScreen extends BaseWidget {
    OverviewScreen({Key? key,required this.onRefresh , required this.overviewComponents}) : super(key: key);
 
 
+   Color getHourColor(int hour){
+    return hour <1 ?Colors.red : Colors.green;
+   }
   @override
   Widget buildWidget(BuildContext context) {
+
     final offers = overviewComponents.offers;
     final appliedOffers = overviewComponents.appliedOffers;
+    final currentShift = overviewComponents.currentShift;
+
+
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
     return SingleChildScrollView(
@@ -75,70 +88,107 @@ class OverviewScreen extends BaseWidget {
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    strings.current_shift,
-                    style: kTextBold.copyWith(fontSize: 16),
-                  ),
-                  Card(
-                    elevation: 3,
-                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 10, top: 16, bottom: 16),
-                      child: Column(
+               StreamBuilder<AppliedOffer>(
+                 stream: overviewComponents.currentShift.stream,
+                 builder: (context, snapshot) {
+                   final currentShift = snapshot.data;
+
+                   return snapshot.data==null ?Container():
+                    Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
 
                         children: [
-                          // Align(
-                          //   alignment: AlignmentDirectional.centerStart,
-                          //   child: Text(
-                          //     'Current Shift',
-                          //     style: kTextBold.copyWith(fontSize: 16),
-                          //   ),
-                          // ),
-                          // Divider(
-                          //   height: 1,
-                          //   color: Colors.grey[300],
-                          // ),
                           Text(
-                            'Sales At City Mall ,Riyadh',
-                            style: kTextSemiBold.copyWith(
-                              fontSize: 16,
-                              decoration: TextDecoration.underline,
+                            strings.current_shift,
+                            style: kTextBold.copyWith(fontSize: 16),
+                          ),
+                          Card(
+                            elevation: 3,
+                            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 10, right: 10, top: 16, bottom: 16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+
+                                children: [
+                                  currentShift!.remainingTimeFinish()>=1?
+                                  Container(
+                                      padding: const EdgeInsetsDirectional.only(start: 20,bottom: 12),
+                                      child: Text('Finished ')) :
+                                  CountdownTimer(
+                                    endTime: currentShift.finishedDateTime()
+                                        .millisecondsSinceEpoch,
+                                    widgetBuilder: (c,time){
+                                      if (time == null) {
+                                          onRefresh();
+                                        return Text('Finished ');
+                                      }
+                                      return Padding(
+                                        padding: const EdgeInsetsDirectional.only(start: 20),
+                                        child: Directionality(textDirection: TextDirection.ltr,
+                                            child: Center(
+                                              child: Text(' ${time.hours!=null ? time.hours:0} : ${time.min!=null ?  time.min : 0} : ${time.sec.toString()}' ,
+                                                style: kTextBold.copyWith(fontSize:18 , color: getHourColor(time.hours!=null ?time.hours!:0)),),
+                                            )),
+                                      );
+                                    },
+                                  ),
+
+                                  Divider(
+                                    height: 1,
+                                    color: Colors.grey[300],
+                                  ),
+                                  Align(
+                                    alignment: AlignmentDirectional.centerStart,
+                                    child: Text(
+                                      currentShift.workingDate.toString(),
+                                      style: kTextBold.copyWith(fontSize: 16),
+                                    ),
+                                  ),
+                                  Text('${currentShift.startTime()} ${strings.to} ${currentShift.finishTime()}',
+                                      style: kTextSemiBold.copyWith(fontSize: 16)),
+                                  Text(
+                                    currentShift.projectName.toString()+' '+currentShift.address.toString(),
+                                    style: kTextSemiBold.copyWith(
+                                      fontSize: 16,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+
+                                ],
+                              ),
                             ),
                           ),
-                          Text('from 8:00 until 12:00',
-                              style: kTextLabel.copyWith(fontSize: 16)),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          Text('40 minutes until finish this shift',
-                              style: kTextLabel.copyWith(fontSize: 16))
                         ],
-                      ),
-                    ),
-                  ),
+                      );
+                 }
+               ),
                   const SizedBox(height: 16,),
-                  Text(
-                    strings.new_jobs,
-                    style: kTextBold.copyWith(fontSize: 16),
-                  ),
 
-                  SizedBox(
-                    height: 320,
-                    child: PageView.builder(
-                        pageSnapping: true,
-                        controller: PageController(
-                          viewportFraction: 0.9,
-                          initialPage: 0,
-                        ),
-                        itemCount: offers.length,
-                        itemBuilder: (con, pos) {
-                      final jobOffer = offers[pos];
-                      return JobItem(jobOffer,padding: const EdgeInsetsDirectional.only(end: 1),onApplyOffer: (){
-                        onRefresh();
-                      },);
-                    }),
-                  ),
+                  offers.isNotEmpty ? Column(
+                    children: [
+                      Text(
+                        strings.new_jobs,
+                        style: kTextBold.copyWith(fontSize: 16),
+                      ),
+                      SizedBox(
+                        height: 320,
+                        child: PageView.builder(
+                            pageSnapping: true,
+                            controller: PageController(
+                              viewportFraction: 0.9,
+                              initialPage: 0,
+                            ),
+                            itemCount: offers.length,
+                            itemBuilder: (con, pos) {
+                          final jobOffer = offers[pos];
+                          return JobItem(jobOffer,padding: const EdgeInsetsDirectional.only(end: 1),onApplyOffer: (){
+                            onRefresh();
+                          },);
+                        }),
+                      ),
+                    ],
+                  ):Container(),
                   SizedBox(height: 16,),
                   Text(
                     strings.applied_opportunities,

@@ -57,6 +57,17 @@
   "male": "Male",
   "female": "Female",
   "start": "Start",
-  "finish": "Finish"
-
+  "finish": "Finish",
+  "error_internet_connection": "Error internet connection!",
+  "complete_cv": "Please complete your CV",
+  "ok_button": "Ok",
+  "complete_profile": "Complete Profile",
+  "open_location": "The location service must be turned on to ensure that you are on the job site",
+  "finish_shift_label": "Finish Shift for ",
+  "start_shift_label": "Start Shift for ",
+  "add_notes": "Add your notes",
+  "cancel_button": "Cancel",
+  "logout_message": "are you sure you want to logout ?",
+  "undefine_error":"Unknown error !",
+  "check_network_connection": "Check your network connection and try again"
 }

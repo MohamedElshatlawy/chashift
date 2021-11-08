@@ -1,4 +1,5 @@
 // ignore: import_of_legacy_library_into_null_safe
+import 'dart:async';
 import 'dart:io';
 
 import 'package:ars_dialog/ars_dialog.dart';
@@ -6,11 +7,15 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shiftapp/data/datasources/remote/api_exception.dart';
+import 'package:shiftapp/data/datasources/remote/resume_not_complete_exception.dart';
 import 'package:shiftapp/data/exceptions/app_exception.dart';
 import 'package:shiftapp/data/repositories/local/local_repository.dart';
+import 'package:shiftapp/presentation/common/extensions.dart';
+import 'package:shiftapp/presentation/profile/pages/profile_page.dart';
 import 'package:shiftapp/presentation/resources/colors.dart';
 import 'package:shiftapp/presentation/resources/constants.dart';
 import 'package:shiftapp/presentation/resources/resources.dart';
+import 'package:shiftapp/presentation/resume/pages/resume_pages.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'base_dialog_widget.dart';
@@ -38,7 +43,7 @@ class DialogsManager {
             Navigator.pop(context);
           },
           child: Text(
-            'Cancel',
+            context.getStrings().cancel_button,
             style: kTextBold.copyWith(color: Colors.grey, fontSize: 14),
           ),
         ),
@@ -48,14 +53,14 @@ class DialogsManager {
 
           },
           child: Text(
-            'Ok',
+            context.getStrings().ok_button,
             style: kTextBold.copyWith(color: kFontDarkGreen, fontSize: 14),
           ),
         )
       ],
       content: Container(
         child: Text(
-          'are you sure you want to logout ?',
+          context.getStrings().logout_message,
           style: kTextSemiBold.copyWith(color: kFontDark, fontSize: 16),
         ),
       ),
@@ -71,29 +76,51 @@ class DialogsManager {
       );
     });
   }
+
   static handleErrorDialogBuilder(BuildContext context  ,dynamic exception){
     String getErrorMessage() {
-
+      final strings = context.getStrings();
       if (exception is DioError) {
-        return (exception ).message;
+        if (exception.error is WebSocketException || exception.error is HandshakeException ) {
+          return context.getStrings().error_internet_connection;
+        }
+        else if(exception.error is SocketException || exception.error is TimeoutException || exception.error is TimeoutException){
+          return context.getStrings().error_internet_connection;
+        }
+        else if(exception.error is ApiException){
+          return exception.message;
+        }
+        else {
+          return context.getStrings().undefine_error;
+        }
       }
       if (exception is ApiException) {
         return (exception ).message;
       }
       if (exception is AppException) {
-        return (exception ).messageEn;
+
+        return context.isRTL()? (exception ).messageAr :(exception ).messageEn;
       }
+
+      if(exception is ResumeNotCompletedException){
+        return strings .complete_cv;
+
+      }
+
       if (exception is SocketException) {
-        'context.getStrings().error_internet_connection';
+       return strings .error_internet_connection;
       }
       if (exception is WebSocketException || exception is HandshakeException) {
-        return 'context.getStrings().check_network_connection';
+        return strings .error_internet_connection;
       }
 
       return exception.toString();
     }
-
-    showErrorDialog(context, getErrorMessage());
+    if(exception is ResumeNotCompletedException){
+      showErrorDialogWithButton(context ,getErrorMessage());
+    }else {
+      showErrorDialog(context, getErrorMessage());
+    }
   }
   static showErrorDialog(BuildContext context, String text) {
     AlertDialog alert = AlertDialog(
@@ -103,7 +130,7 @@ class DialogsManager {
             Navigator.pop(context);
           },
           child: Text(
-            'Ok',
+            context.getStrings().ok_button,
             style: kTextBold.copyWith(color: kPrimary, fontSize: 14),
           ),
         )
@@ -113,10 +140,64 @@ class DialogsManager {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              height: 80,
+              height: 60,
               child: Image.asset(
                 'images/error.gif',
-                height: 80,
+                height: 60,
+              ),
+            ),
+            Text(
+              text,
+              style: kTextSemiBold.copyWith(color: kFontDark, fontSize: 12),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+      await showDialog(
+        barrierDismissible: true,
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+    });
+  }
+  static showErrorDialogWithButton(BuildContext context, String text) {
+    AlertDialog alert = AlertDialog(
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text(
+            context.getStrings().ok_button,
+            style: kTextBold.copyWith(color: Colors.grey, fontSize: 14),
+          ),
+        )
+        ,
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.pushNamed(context, ResumePages.routeName);
+          },
+          child: Text(
+             context.getStrings().complete_cv,
+            style: kTextBold.copyWith(color: kPrimary, fontSize: 14),
+          ),
+        )
+      ],
+      content: Container(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              height: 60,
+              child: Image.asset(
+                'images/error.gif',
+                height: 60,
               ),
             ),
             Text(
@@ -251,7 +332,7 @@ class DialogsManager {
             }
           },
           child: Text(
-            'ok',
+            context.getStrings().ok_button,
             style: kTextBold.copyWith(color: kPrimaryDark, fontSize: 14),
           ),
         )

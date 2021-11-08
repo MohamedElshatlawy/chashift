@@ -1,10 +1,14 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:koin_flutter/src/widget_extension.dart';
 import 'package:shiftapp/data/repositories/user/user_repository.dart';
+import 'package:shiftapp/domain/user.dart';
 import 'package:shiftapp/presentation/appliedoffers/pages/appliedoffers_pages.dart';
 import 'package:shiftapp/presentation/common/extensions.dart';
 import 'package:shiftapp/presentation/joboffers/jobs_offers_screen.dart';
+import 'package:shiftapp/presentation/login/pages/login_page.dart';
 import 'package:shiftapp/presentation/overview/overview_screen.dart';
 import 'package:shiftapp/presentation/profile/index.dart';
 import 'package:shiftapp/presentation/profile/pages/profile_screen.dart';
@@ -13,7 +17,10 @@ import 'package:shiftapp/presentation/resources/constants.dart';
 import 'package:shiftapp/presentation/resume/pages/resume_pages.dart';
 import 'package:shiftapp/presentation/settings/settings_screen.dart';
 import 'package:shiftapp/presentation/widgets/app_widgets.dart';
+import 'package:shiftapp/presentation/widgets/dialogs_manager.dart';
+import 'package:shiftapp/presentation/widgets/image_builder.dart';
 import 'package:shiftapp/presentation/widgets/material_text.dart';
+import 'package:shiftapp/utils/notification.dart';
 
 import '../../main.dart';
 
@@ -34,7 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> _widgetOptions = <Widget>[
     const OverviewPage(),
      JobsOffersScreen(),
-    ProfilePage()
+     AppliedOffersPage()
   ];
 
   void _onItemTapped(int index) {
@@ -46,8 +53,9 @@ class _MyHomePageState extends State<MyHomePage> {
   GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    final _profileBloc =  BlocProvider.of<ProfileBloc>(context) ;
     final strings = context.getStrings();
-    final UserRepository userRepository = getKoin().get();
+    _profileBloc.add(FetchProfile());
     return Scaffold(
       key: _scaffoldKey,
       appBar: kAppBar(context,hasDrawerMenu: true,isMain: true,onClickMenu: (){
@@ -57,6 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
       drawer: Drawer(
         child: SafeArea(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Expanded(
                 child: ListView(
@@ -64,41 +73,42 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: EdgeInsets.zero,
                   children: <Widget>[
                     Container(
-                      child: DrawerHeader(
-                        decoration: const BoxDecoration(),
-                        child: Column(
-                          children: [
-                            Container(
-                              width: 100,
-                              child: CircleAvatar(
-                                  radius: 40,
-                                  backgroundImage: Image.asset('images/user.png').image
+                      child: StreamBuilder<User?>(
+                        stream: _profileBloc.userStream,
+                        builder: (context, snapshot) {
+                          return DrawerHeader(
+                            child: Column(
+                              children: [
+                              CircleAvatar(
+                                child: kBuildCircleImage(snapshot.data!=null ? snapshot.data!.getImagePath().toString():"",size: 80),
+                                radius: 36,
                               ),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: Colors.grey.shade300,
-                                  width: 3.0,
+                                const SizedBox(
+                                  height: 10,
                                 ),
-                              ),
+                                Text(
+                                  snapshot.data!=null ? snapshot.data!.name.toString():"",
+                                  style: kTextBoldTitle,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
                             ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              userRepository.getUser()!.name.toString(),
-                              style: kTextBoldTitle,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
+                          );
+                        }
                       ),
                     ),
 
                     buildDrawerItem(
+                        title:  context.getStrings().profile,
+                        icon: const Icon(Icons.person,color: kAccent,),
+                        onTap: () {
+                          Navigator.pushNamed(context, ProfilePage.routeName);
+                          showAWNotification();
+                        }),
+                    buildDrawerItem(
                         title:  context.getStrings().applied_jobs,
-                        icon: const Icon(Icons.work_rounded,color: kAccent,),
+                        icon: const Icon(Icons.date_range,color: kAccent,),
                         onTap: () {
                           Navigator.pushNamed(context, AppliedOffersPage.routeName);
                         }),
@@ -116,6 +126,19 @@ class _MyHomePageState extends State<MyHomePage> {
                         }),
                   ],
                 ),
+              ),
+              Container(
+                child: buildDrawerItem(
+                    title:  context.getStrings().logout,
+                    icon: const Icon(Icons.logout,color: Colors.red,),
+                    textColor: Colors.red,
+                    onTap: () {
+                      DialogsManager.showLogoutDialog(context, onClickOk: () {
+                        _profileBloc.add(LogoutEvent());
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, LoginPage.routeName, (route) => false);
+                      });
+                    }),
               ),
             ],
           )
@@ -151,9 +174,9 @@ class _MyHomePageState extends State<MyHomePage> {
               label: context.getStrings().jobs),
           BottomNavigationBarItem(
               icon: const Icon(
-                Icons.person,
+                Icons.date_range,
               ),
-              label: strings.profile),
+              label: strings.working_hours),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: kPrimaryDark,
@@ -166,12 +189,13 @@ class _MyHomePageState extends State<MyHomePage> {
 Widget buildDrawerItem(
     {required String title,
       required Widget icon,
+      Color textColor=kFontDarkGreen,
       required Function() onTap}) {
   return InkWell(
     onTap: onTap,
     child: MaterialText(
       title,
-      style: kTextSemiBold,
+      style: kTextSemiBold.copyWith(color: textColor),
       startIconPadding: const EdgeInsetsDirectional.only(end: 12),
       startIcon: icon,
       padding: const EdgeInsetsDirectional.only(start: 16, top: 8, bottom: 8),

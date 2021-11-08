@@ -9,6 +9,7 @@ import 'package:shiftapp/data/repositories/joboffers/job_offers_repository.dart'
 import 'package:shiftapp/data/repositories/login/auth_repository.dart';
 import 'package:shiftapp/data/repositories/user/user_repository.dart';
 import 'package:shiftapp/domain/applied_offer.dart';
+import 'package:shiftapp/domain/date_formatter.dart';
 import 'package:shiftapp/domain/opportunities_status.dart';
 import 'package:shiftapp/presentation/common/common_state.dart';
 import 'dart:async';
@@ -27,12 +28,11 @@ class AppliedOffersBloc extends Bloc<AppliedOffersEvents, CommonState> {
   AppliedOffersBloc(this._offersRepository) : super(UnInitState());
 
 
+
   @override
   Future<void> close() async {
     await super.close();
   }
-
-
 
   @override
   Stream<CommonState> mapEventToState(

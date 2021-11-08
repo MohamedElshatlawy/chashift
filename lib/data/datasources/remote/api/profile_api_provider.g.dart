@@ -21,7 +21,7 @@ class _ProfileAPI implements ProfileAPI {
     final queryParameters = <String, dynamic>{};
     final _data = FormData();
     _data.files.add(MapEntry(
-        'file',
+        'ProfileImage',
         MultipartFile.fromFileSync(image.path,
             filename: image.path.split(Platform.pathSeparator).last)));
     final _result = await _dio.fetch<Map<String, dynamic>>(
@@ -34,26 +34,6 @@ class _ProfileAPI implements ProfileAPI {
     final value = ApiResponse<String>.fromJson(
       _result.data!,
       (json) => json as String,
-    );
-    return value;
-  }
-
-  @override
-  Future<ApiResponse<dynamic>> updatePassword(updateResumeParams) async {
-    const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(updateResumeParams.toJson());
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<ApiResponse<dynamic>>(
-            Options(method: 'POST', headers: <String, dynamic>{}, extra: _extra)
-                .compose(
-                    _dio.options, '/FreeLancerInfo/UpdatePasswordFreelancer',
-                    queryParameters: queryParameters, data: _data)
-                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = ApiResponse<dynamic>.fromJson(
-      _result.data!,
-      (json) => json as dynamic,
     );
     return value;
   }

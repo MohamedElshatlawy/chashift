@@ -57,5 +57,17 @@
   "male": "ذكر",
   "female": "انثي",
   "start": "ابدء الدوام",
-  "finish": "إنهاء الدوام"
+  "finish": "إنهاء الدوام",
+  "error_internet_connection": "خطأ في الاتصال بالشبكة",
+  "complete_cv": "برجاء استكمال بيانات السيرة الذاتية",
+  "ok_button": "حسناً",
+  "complete_profile": "إستكمال السيرة الذاتية",
+  "open_location": "يجب تشغيل خدمة الموقع للتأكد من وجودك في موقع العمل",
+  "finish_shift_label": "إنهاء الدوام لفترة عمل ",
+  "start_shift_label": "بدء الدوام لفترة عمل ",
+  "add_your_notes": "اضف ملاحظاتك",
+  "cancel_button": "الغاء",
+  "logout_message": "هل انت من انك تريد تسجيل الخروج ؟",
+  "undefine_error":"حدث خطأ ما",
+  "check_network_connection": "تحقق من اتصال الشبكة لديك وحاول مرة أخرى"
 }

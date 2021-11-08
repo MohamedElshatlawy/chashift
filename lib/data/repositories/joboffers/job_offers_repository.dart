@@ -36,4 +36,9 @@ class JobOffersRepository {
     return response.message!;
   }
 
+  Future<AppliedOffer?> fetchCurrentShift() async {
+    final response = await api.fetchCurrentShift();
+    return response.payload;
+  }
+
 }
