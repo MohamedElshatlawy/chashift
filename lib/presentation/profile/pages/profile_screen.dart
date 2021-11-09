@@ -18,6 +18,8 @@ import 'package:shiftapp/presentation/widgets/image_builder.dart';
 import 'package:shiftapp/presentation/widgets/loading_widget.dart';
 import 'package:shiftapp/presentation/widgets/material_text.dart';
 
+import 'change_password.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({required ProfileBloc profileBloc})
       : _profileBloc = profileBloc;
@@ -134,7 +136,8 @@ class ProfileScreenState extends State<ProfileScreen> {
                     )),
                 InkWell(
                   onTap: () {
-                    //Navigator.pushNamed(context, ChangePasswordScreen.routeName);
+                    Navigator.pushNamed(
+                        context, ChangePasswordScreen.routeName);
                   },
                   child: buildProfileItem(strings.change_password,
                       icon: const Icon(
@@ -186,7 +189,8 @@ class ProfileImagePicker extends StatefulWidget {
   final Function(File) onPickImage;
   final String imagePath;
 
-  const ProfileImagePicker({required this.onPickImage ,required this.imagePath});
+  const ProfileImagePicker(
+      {required this.onPickImage, required this.imagePath});
   @override
   _ProfileImagePickerState createState() {
     return _ProfileImagePickerState();
@@ -212,9 +216,9 @@ class _ProfileImagePickerState extends State<ProfileImagePicker> {
   Widget build(BuildContext context) {
     return InkWell(
       child: pickedFile == null
-          ?  CircleAvatar(
-        child: kBuildCircleImage(widget.imagePath,size: 80),
-        radius: 36,
+          ? CircleAvatar(
+              child: kBuildCircleImage(widget.imagePath, size: 80),
+              radius: 36,
             )
           : CircleAvatar(
               backgroundImage: FileImage(file!),

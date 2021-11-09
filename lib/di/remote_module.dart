@@ -22,29 +22,33 @@ import 'di_constants.dart';
 
 final remoteModule = Module()
   ..factory((scope) {
-    return HeaderInterceptor(scope.get<UserRepository>(),scope.get<LocalRepository>() );
+    return HeaderInterceptor(
+        scope.get<UserRepository>(), scope.get<LocalRepository>());
   })
   ..factory((scope) {
     return ClientCreator(scope.get<HeaderInterceptor>());
   })
   ..factory((scope) => AuthAPI(scope.get<ClientCreator>().create()))
   ..factory((scope) => ProfileAPI(scope.get<ClientCreator>().create()))
-  ..factory((scope) => AuthRepository(scope.get(),scope.get()))
+  ..factory((scope) => AuthRepository(scope.get(), scope.get()))
   ..factory((scope) => JobOffersAPI(scope.get<ClientCreator>().create()))
   ..factory((scope) => JobOffersRepository(scope.get()))
   ..factory((scope) => ResumeAPI(scope.get<ClientCreator>().create()))
-  ..factory((scope) => ProfileRepository(scope.get(), scope.get()))
+  ..factory((scope) => ProfileRepository(scope.get<ProfileAPI>()))
   ..factory((scope) => ResumeRepository(scope.get<ResumeAPI>()));
 
 final blocsModule = Module()
   ..factory((scope) => LoginBloc(scope.get<AuthRepository>()))
-  ..factory((scope) => ProfileBloc(scope.get() , scope.get()))
+  ..factory((scope) => ProfileBloc(scope.get(), scope.get()))
   ..factory((scope) => ResumeBloc(scope.get()))
   ..factory((scope) => OverviewBloc(scope.get()))
   ..factory((scope) => AppliedOffersBloc(scope.get()))
-  ..factory((scope) => JobOffersBloc(scope.get() , scope.get())) ;
+  ..factory((scope) => JobOffersBloc(scope.get(), scope.get()));
 
 final appModule = Module()
-  ..single((scope) => UserRepository(preferences: scope.get<SharedPreferences>()))
-  ..single((scope) => scope.get<UserRepository>().getUser()?.token, qualifier: StringQualifier(DIConstants.TOKEN_KEY))
-  ..single((scope) => LocalRepository(preferences: scope.get<SharedPreferences>()));
+  ..single(
+      (scope) => UserRepository(preferences: scope.get<SharedPreferences>()))
+  ..single((scope) => scope.get<UserRepository>().getUser()?.token,
+      qualifier: StringQualifier(DIConstants.TOKEN_KEY))
+  ..single(
+      (scope) => LocalRepository(preferences: scope.get<SharedPreferences>()));

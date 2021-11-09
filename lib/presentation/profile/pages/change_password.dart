@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter/services.dart';
+import 'package:koin_flutter/src/widget_extension.dart';
+import 'package:shiftapp/data/models/auth/change_password_params.dart';
+import 'package:shiftapp/presentation/common/common_state.dart';
+import 'package:shiftapp/presentation/profile/index.dart';
+import 'package:shiftapp/presentation/widgets/app_button.dart';
+import 'package:shiftapp/presentation/widgets/dialogs_manager.dart';
+import 'package:shiftapp/presentation/widgets/material_text_field.dart';
 
-/*
 class ChangePasswordScreen extends StatelessWidget {
-  static const routeName='/createpassword';
+  static const routeName = '/createpassword';
 
   @override
   Widget build(BuildContext context) {
-    final bloc  = getKoin().get<ProfileBloc>();
+    final bloc = getKoin().get<ProfileBloc>();
     final progressDialog = DialogsManager.createProgress(context);
     Widget buildForm(BuildContext context) {
-      String ?newPassword;
-      String ?oldPassword;
+      String? newPassword;
+      String? oldPassword;
 
       final _formKey = GlobalKey<FormState>();
 
@@ -21,55 +26,61 @@ class ChangePasswordScreen extends StatelessWidget {
           key: _formKey,
           child: Column(
             children: [
-              PasswordTextFiled(
-                onChange: (value) {
+              MaterialTextField(
+                onChanged: (value) {
                   oldPassword = value;
                   print('ON SET NEW PASSWORD $newPassword');
                 },
                 validator: (value) {
-                  if (value==null) {
+                  if (value == null) {
                     return 'من فضلك قم بإدخال كلمة المرور الحالية ';
                   }
                   return null;
                 },
-                margin: EdgeInsets.only(right: 22, left: 22, top: 24),
-                hintText: 'كلمة المرور الحالية',
+                margin: const EdgeInsets.only(right: 22, left: 22, top: 24),
+                inputDecoration: const InputDecoration(
+                  hintText: 'كلمة المرور الحالية',
+                ),
               ),
-              PasswordTextFiled(
-                onChange: (value) {
+              MaterialTextField(
+                onChanged: (value) {
                   newPassword = value;
                   print('ON SET NEW PASSWORD $newPassword');
                 },
                 validator: (value) {
-                  if (value==null) {
+                  if (value == null) {
                     return 'من فضلك قم بإدخال كلمة السر الجديدة';
                   }
                   return null;
                 },
-                margin: EdgeInsets.only(right: 22, left: 22, top: 24),
-                hintText: 'كلمة المرور الجديدة',
+                margin: const EdgeInsets.only(right: 22, left: 22, top: 24),
+                inputDecoration: const InputDecoration(
+                  hintText: 'كلمة المرور الجديدة',
+                ),
               ),
-              PasswordTextFiled(
+              MaterialTextField(
                 validator: (value) {
                   if (value != newPassword) {
                     return 'من فضلك قم بإدخال كلمة المرور متطابقة';
                   }
                   return null;
                 },
-                margin: EdgeInsets.only(right: 22, left: 22, top: 24),
-                hintText: 'تأكيد كلمة المرور ',
+                margin: const EdgeInsets.only(right: 22, left: 22, top: 24),
+                inputDecoration: const InputDecoration(
+                  hintText: 'تأكيد كلمة المرور ',
+                ),
               ),
               AppButton(
-                margin: EdgeInsets.only(left: 22, right: 22, top: 32),
+                margin: const EdgeInsets.only(left: 22, right: 22, top: 32),
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     bloc.add(ChangePasswordEvent(ChangePasswordParams(
-                        newPassword: newPassword,
-                        currentPassword: oldPassword)));
-                    kHideKeyboard();
+                      oldPassword: oldPassword,
+                      newPassword: newPassword,
+                    )));
+                    // kHideKeyboard();
 
                   }
-
                 },
                 text: 'إرسال',
               )
@@ -81,7 +92,7 @@ class ChangePasswordScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: kBuildAppBar(context, title: 'Change password'),
+      // appBar: kBuildAppBar(context, title: 'Change password'),
       body: BlocProvider(
           create: (BuildContext context) {
             return bloc;
@@ -90,28 +101,26 @@ class ChangePasswordScreen extends StatelessWidget {
             bloc: bloc,
             listener: (context, state) {
               print('BlocListener STATE ${state}');
+
               if (state is LoadingDialogState) {
                 progressDialog.show();
               }
               if (state is SuccessState) {
                 progressDialog.dismiss();
-
-                DialogsManager.showMessageDialog(context, state.data, onClickOk: (){
-                  Navigator.pop(context);
+                DialogsManager.showMessageDialog(
+                    context, state.successResponse.toString(), onClickOk: () {
+                  state.successResponse == 'Infromation is Saved'
+                      ? Navigator.pop(context)
+                      : null;
                 });
               }
               if (state is ErrorDialogState) {
                 progressDialog.dismiss();
-                DialogsManager.showErrorDialog(context, state.toString());
+                DialogsManager.showErrorDialog(context, state.error.toString());
               }
             },
             child: buildForm(context),
           )),
     );
-
-
   }
-
-
 }
-*/

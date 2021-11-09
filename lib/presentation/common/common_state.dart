@@ -1,4 +1,3 @@
-
 import 'package:rxdart/subjects.dart';
 
 abstract class CommonState {
@@ -7,13 +6,18 @@ abstract class CommonState {
 
 /// UnInitialized
 class UnInitState extends CommonState {}
-class LoadingState extends CommonState {}
-class LoadingDialogState extends CommonState {}
-class ProfileNotCompletedState extends CommonState {}
-class UnAuthorizedState extends CommonState {}
-class FinishedState extends CommonState {}
-class FinishedDialogState extends CommonState {}
 
+class LoadingState extends CommonState {}
+
+class LoadingDialogState extends CommonState {}
+
+class ProfileNotCompletedState extends CommonState {}
+
+class UnAuthorizedState extends CommonState {}
+
+class FinishedState extends CommonState {}
+
+class FinishedDialogState extends CommonState {}
 
 /// Initialized
 class Initialized<T> extends CommonState {
@@ -26,7 +30,6 @@ class Initialized<T> extends CommonState {
 class ErrorState extends CommonState {
   final dynamic error;
   ErrorState(this.error);
-
 }
 
 class ErrorDialogState extends CommonState {
@@ -34,43 +37,43 @@ class ErrorDialogState extends CommonState {
   ErrorDialogState(this.error);
 }
 
-
 abstract class StreamState<T> {
-  dynamic  error ;
+  dynamic error;
   bool get hasError;
   bool get hasData;
-  T?  data;
-
+  T? data;
 
   final _streamController = BehaviorSubject<T>();
   Stream<T> get stream => _streamController.stream;
 
-  setError(dynamic initError){
-    error = initError ;
+  setError(dynamic initError) {
+    error = initError;
     _streamController.addError(initError);
-    data= null ;
+    data = null;
   }
 
-  setData(T initData){
-    data = initData ;
+  setData(T initData) {
+    data = initData;
     _streamController.add(initData);
-    error = null ;
+    error = null;
   }
-  close(){
+
+  close() {
     _streamController.close();
   }
 }
 
 class StreamStateInitial<T> extends StreamState<T> {
-
-
-
   @override
   // TODO: implement hasData
-  bool get hasData => data!=null ;
+  bool get hasData => data != null;
 
   @override
   // TODO: implement hasError
-  bool get hasError => error!=null ;
+  bool get hasError => error != null;
+}
 
+class SuccessState extends CommonState {
+  final dynamic successResponse;
+  SuccessState(this.successResponse);
 }
